@@ -37,6 +37,7 @@
         this.message = 'Logged in successfully!';
         // Stockez le token reçu pour l'authentification future
         localStorage.setItem('auth_token', response.data.access_token);
+        localStorage.setItem('image_url', response.data.image || ''); // Stockez l'URL de l'image
         // Redirection vers le Dashboard
         this.$router.push('/dashboard');
       } catch (error) {

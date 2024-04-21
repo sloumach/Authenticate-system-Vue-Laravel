@@ -21,3 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/email/verify/{id}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/upload-image', [AuthController::class, 'uploadImage'])->middleware('auth:sanctum');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');

@@ -58,14 +58,39 @@ class AuthController extends Controller
 
         $user = auth()->user();
         $token = $user->createToken('auth_token')->plainTextToken; // Génération du token
-
+        $imageUrl = $user->image ? url('images/' . $user->image) : null;
         return response()->json([
             'status' => 'success',
             'message' => 'Logged in successfully.',
             'access_token' => $token, // Retour du token
+            'image' => $imageUrl,
             'data' => $user
         ], 200);
     }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $user = auth()->user(); // ou User::find($request->user_id); si vous n'utilisez pas d'authentification
+
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('images'), $imageName);
+
+        $user->image = $imageName;
+        $user->save();
+
+        return response()->json(['message' => 'Image uploaded successfully', 'image' => $imageName]);
+    }
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();  // Révoquez tous les tokens de l'utilisateur
+        return response()->json(['message' => 'Logged out successfully']);
+    }
+
+
 
 
 }
